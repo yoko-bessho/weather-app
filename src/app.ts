@@ -161,43 +161,16 @@ async function fetchWeather(cityCode: string): Promise<void> {
     }
     showElement(resultContainer);
 
-    const weatherCard = document.createElement('div');
-    weatherCard.classList.add('weather-card');
-
-    const cityName = document.createElement('h2');
-    cityName.textContent = data.title;
-
-    const forecast = document.createElement('p');
-    forecast.textContent = data.description.bodyText;
-
-    resultContainer.appendChild(weatherCard);
-    weatherCard.appendChild(cityName);
-    weatherCard.appendChild(forecast);
+    const weatherCard = createWeatherCard(data);
 
     const forecastWrapper = document.createElement('div');
     forecastWrapper.classList.add('forecast-wrapper');
 
     weatherCard.appendChild(forecastWrapper);
-
     data.forecasts.forEach((item: Forecast) => {
-      const forecastItem = document.createElement('div');
-      forecastItem.classList.add('forecast-item');
-
-      const date = document.createElement('p');
-      date.textContent = item.date;
-
-      const image = document.createElement('img');
-      image.src = item.image.url;
-
-      const telop = document.createElement('p');
-      telop.textContent = item.telop;
-
-      forecastItem.appendChild(date);
-      forecastItem.appendChild(image);
-      forecastItem.appendChild(telop);
-
-      forecastWrapper.appendChild(forecastItem);
+      forecastWrapper.append(createForecastItem(item));
     });
+
   } catch (e) {
     hideElement(loading);
     showElement(error);
@@ -208,6 +181,7 @@ async function fetchWeather(cityCode: string): Promise<void> {
 if (!weatherForm) {
   throw new Error('weatherFormがないのだが・・');
 }
+
 weatherForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -218,5 +192,42 @@ weatherForm.addEventListener('submit', (e) => {
     alert('都市を選択してね');
     return;
   }
+
   void fetchWeather(cityCode);
 });
+
+function createWeatherCard(data: WeatherResponse): HTMLElement {
+  const weatherCard = document.createElement('div');
+  weatherCard.classList.add('weather-card');
+
+  const cityName = document.createElement('h2');
+  cityName.textContent = data.title;
+
+  const forecast = document.createElement('p');
+  forecast.textContent = data.description.bodyText;
+
+  weatherCard.appendChild(cityName);
+  weatherCard.appendChild(forecast);
+
+  return weatherCard;
+}
+
+function createForecastItem(item: Forecast): HTMLElement {
+  const forecastItem = document.createElement('div');
+  forecastItem.classList.add('forecast-item');
+
+  const date = document.createElement('p');
+  date.textContent = item.date;
+
+  const image = document.createElement('img');
+  image.src = item.image.url;
+
+  const telop = document.createElement('p');
+  telop.textContent = item.telop;
+
+  forecastItem.appendChild(date);
+  forecastItem.appendChild(image);
+  forecastItem.appendChild(telop);
+
+  return forecastItem;
+}

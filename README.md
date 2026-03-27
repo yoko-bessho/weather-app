@@ -6,4 +6,4 @@
 
 ## 使用API
 学習用のため以下を使用させてもらってます（気象庁 HP の API を活用したもの）
-https://weather.tsukumijima.net/　
+https://weather.tsukumijima.net/
